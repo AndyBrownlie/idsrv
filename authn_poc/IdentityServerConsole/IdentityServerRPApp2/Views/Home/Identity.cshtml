@@ -1,0 +1,18 @@
+﻿@model IEnumerable<System.Security.Claims.Claim>
+@{
+    ViewBag.Title = "Identity";
+}
+
+<h2>Identity</h2>
+<dl>
+    @foreach (var claim in Model)
+    {
+        <dt>@claim.Type</dt>
+        <dd>@claim.Value</dd>
+    }
+</dl>
+
+<a href="@Url.Action("Resource")">Resource API Call</a>
+<br/>
+<a href="@Url.Action("AjaxResource")">AJAX Resource API Call</a>
+

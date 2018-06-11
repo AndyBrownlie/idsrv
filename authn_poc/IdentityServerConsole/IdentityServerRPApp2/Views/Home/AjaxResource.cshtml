@@ -1,0 +1,65 @@
+﻿@using System.Configuration
+
+@{
+    ViewBag.Title = "AjaxResource";
+}
+
+<h2>Ajax Resource</h2>
+<body>
+<input id="btnGetWith" type="button" value="Get with Access Token" />
+<input id="btnGetWithout" type="button" value="Get without Access Token" />
+    <br/>
+    <br/>
+    <div id="output"></div>
+    <br/>
+</body>
+<script type = "text/javascript" 
+        src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+       
+
+        $('#btnGetWith').click(function () {
+            $(function () {
+                $.ajax({
+                    url: "@ConfigurationManager.AppSettings["res1:Url"]",
+                    type: "GET",
+                    dataType: "json",
+                    crossOrigin: true,
+                    headers: { Authorization: "Bearer " + "@HttpContext.Current.Request.Cookies["access_token"].Value" },
+                    success: function (response) {
+                        var resp = JSON.stringify(response);
+                        $("#output").html(resp);
+                    },
+                    error: function (xhr, status, errorThrown) {
+        $("#output").html(xhr.statusText + ": " + xhr.status.toString());
+                    }
+                });
+            });
+        });
+        $('#btnGetWithout').click(function () {
+            $(function () {
+                $.ajax({
+                    url: "@ConfigurationManager.AppSettings["res1:Url"]",
+                    type: "GET",
+                    dataType: "json",
+                    crossOrigin: true,
+                    //no bearer token passed
+                    success: function (response) {
+                        var resp = JSON.stringify(response);
+                        $("#output").html(resp);
+                    },
+                    error: function (xhr, status) {
+                        var resp = JSON.parse(xhr.responseText);
+                        $("#output").html(status + ": " + resp.Message);
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+
+
